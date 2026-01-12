@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: authentication-authorization-service
+  mongodb:
+    host: ${MONGO_SERVER}
+    port: ${MONGO_PORT}
