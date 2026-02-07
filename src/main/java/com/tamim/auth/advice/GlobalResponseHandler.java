@@ -1,7 +1,10 @@
 package com.tamim.auth.advice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tamim.auth.dto.error.ApiErrorResponse;
 import com.tamim.auth.dto.response.ApiResponse;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -14,25 +17,35 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
-    public boolean supports(MethodParameter returnType,
-                            Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(@NonNull MethodParameter returnType,
+                            @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
     public Object beforeBodyWrite(Object body,
-                                  MethodParameter returnType,
-                                  MediaType contentType,
-                                  Class<? extends HttpMessageConverter<?>> converterType,
-                                  ServerHttpRequest request,
-                                  ServerHttpResponse response) {
+                                  @NonNull MethodParameter returnType,
+                                  @NonNull MediaType contentType,
+                                  @NonNull Class<? extends HttpMessageConverter<?>> converterType,
+                                  @NonNull ServerHttpRequest request,
+                                  @NonNull ServerHttpResponse response) {
 
         if (body instanceof ApiErrorResponse) {
             return body;
         }
 
-        return new ApiResponse<>(body, resolveMessage(request));
+        if (body instanceof String) {
+            try {
+                return objectMapper.writeValueAsString(ApiResponse.success(body));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return ApiResponse.success(resolveMessage(request), body);
     }
 
     private String resolveMessage(ServerHttpRequest request) {
