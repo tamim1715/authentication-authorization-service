@@ -1,6 +1,7 @@
-package com.tamim.auth.exception;
+package com.tamim.auth.advice;
 
 import com.tamim.auth.dto.error.ApiErrorResponse;
+import com.tamim.auth.exception.ApiException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
