@@ -1,12 +1,9 @@
 package com.tamim.auth.advice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tamim.auth.dto.error.ApiErrorResponse;
+import com.tamim.auth.dto.response.ApiErrorResponse;
 import com.tamim.auth.dto.response.ApiResponse;
 import org.jspecify.annotations.NonNull;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -16,8 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @RestControllerAdvice
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public boolean supports(@NonNull MethodParameter returnType,
@@ -33,25 +28,10 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                                   @NonNull ServerHttpRequest request,
                                   @NonNull ServerHttpResponse response) {
 
-        if (body instanceof ApiErrorResponse) {
+        if (body instanceof ApiResponse || body instanceof ApiErrorResponse) {
             return body;
         }
 
-        if (body instanceof String) {
-            try {
-                return objectMapper.writeValueAsString(ApiResponse.success(body));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return ApiResponse.success(resolveMessage(request), body);
-    }
-
-    private String resolveMessage(ServerHttpRequest request) {
-        if (request.getMethod() == HttpMethod.POST) return "Created successfully";
-        if (request.getMethod() == HttpMethod.PUT) return "Updated successfully";
-        if (request.getMethod() == HttpMethod.DELETE) return "Deleted successfully";
-        return "Success";
+        return ApiResponse.success(body);
     }
 }

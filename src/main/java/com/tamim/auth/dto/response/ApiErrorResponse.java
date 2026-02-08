@@ -1,4 +1,4 @@
-package com.tamim.auth.dto.error;
+package com.tamim.auth.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
