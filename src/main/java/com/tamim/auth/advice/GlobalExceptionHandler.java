@@ -1,6 +1,7 @@
-package com.tamim.auth.exception;
+package com.tamim.auth.advice;
 
-import com.tamim.auth.dto.error.ApiErrorResponse;
+import com.tamim.auth.dto.response.ApiErrorResponse;
+import com.tamim.auth.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
