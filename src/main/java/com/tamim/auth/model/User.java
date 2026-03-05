@@ -1,6 +1,5 @@
-package com.tamim.auth.model.user;
+package com.tamim.auth.model;
 import com.tamim.auth.enums.UserType;
-import com.tamim.auth.model.base.BaseEntity;
 import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;

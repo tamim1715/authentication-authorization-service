@@ -1,9 +1,9 @@
 package com.tamim.auth.service.auth;
 
-import com.tamim.auth.dto.request.user.RegisterRequest;
+import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.ValidationException;
-import com.tamim.auth.model.user.User;
+import com.tamim.auth.model.User;
 import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;

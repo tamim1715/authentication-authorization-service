@@ -1,4 +1,4 @@
-package com.tamim.auth.dto.request.user;
+package com.tamim.auth.dto.request.auth;
 
 import com.tamim.auth.enums.UserType;
 import jakarta.validation.constraints.*;

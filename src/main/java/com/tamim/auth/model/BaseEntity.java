@@ -1,4 +1,4 @@
-package com.tamim.auth.model.base;
+package com.tamim.auth.model;
 
 import com.tamim.auth.enums.RecordStatus;
 import lombok.Getter;

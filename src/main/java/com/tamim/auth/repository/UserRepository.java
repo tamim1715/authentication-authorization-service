@@ -1,7 +1,7 @@
 package com.tamim.auth.repository;
 
 import com.tamim.auth.enums.RecordStatus;
-import com.tamim.auth.model.user.User;
+import com.tamim.auth.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

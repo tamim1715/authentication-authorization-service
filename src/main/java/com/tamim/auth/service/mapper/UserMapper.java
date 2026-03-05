@@ -1,8 +1,8 @@
 package com.tamim.auth.service.mapper;
 
-import com.tamim.auth.dto.request.user.RegisterRequest;
+import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.UserResponse;
-import com.tamim.auth.model.user.User;
+import com.tamim.auth.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserMapper {

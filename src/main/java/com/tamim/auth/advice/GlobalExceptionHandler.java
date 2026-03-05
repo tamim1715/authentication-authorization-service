@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleUnexpected(Exception ex) {
+    public ResponseEntity<ApiErrorResponse> handleUnexpectedException(Exception ex) {
 
         log.error("Unexpected system error", ex);
 
