@@ -13,6 +13,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByEmailAndStatus(String email, RecordStatus status);
 
+    boolean existsByEmailAndStatus(String email, RecordStatus status);
+
     Optional<User> findByIdAndStatus(String id, RecordStatus status);
 
     List<User> findAllByStatus(RecordStatus status);
