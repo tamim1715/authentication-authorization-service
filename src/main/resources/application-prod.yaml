@@ -4,3 +4,6 @@ spring:
   mongodb:
     host: ${MONGO_SERVER}
     port: ${MONGO_PORT}
+jwt:
+  private-key: ${PRIVATE_KEY}
+  public-key: ${PUBLIC_KEY}
