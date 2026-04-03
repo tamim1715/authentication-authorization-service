@@ -54,19 +54,26 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.12.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <scope>runtime</scope>
             <version>0.12.6</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
             <scope>runtime</scope>
-            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- 2. Explicitly override the vulnerable transitive jackson-core dependency -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.18.6</version> <!-- Fixed version -->
         </dependency>
 
         <dependency>
@@ -74,22 +81,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <version>4.0.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-docker-compose</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-mongodb-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security-oauth2-client-test</artifactId>
