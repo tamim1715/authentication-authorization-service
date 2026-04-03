@@ -21,18 +21,16 @@ public class JwtTokenProvider {
 
     private final KeyProvider keyProvider;
 
-    private static final long ACCESS_TOKEN_EXPIRATION = 900000; // 15 minutes
-
-    public String generateAccessToken(String userId) {
+    public String generateAccessToken(String userId, String username, long accessTokenExpiration) {
 
         PrivateKey privateKey = keyProvider.getPrivateKey();
 
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(userId)
-                .issuer("your-app-name")
+                .issuer(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(privateKey, Jwts.SIG.RS256)
                 .compact();
     }
@@ -45,6 +43,7 @@ public class JwtTokenProvider {
         try {
             getClaims(token); // If it parses without exception, it's valid
             return true;
+
         } catch (JwtException | IllegalArgumentException e) {
             log.error(e.getMessage());
             return false;
