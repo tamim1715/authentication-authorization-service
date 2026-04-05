@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,12 +26,15 @@ public class JwtTokenProvider {
 
         PrivateKey privateKey = keyProvider.getPrivateKey();
 
+        Instant now = Instant.now();
+        Instant expiry = now.plusSeconds(accessTokenExpiration);
+
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(userId)
                 .issuer(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiry))
                 .signWith(privateKey, Jwts.SIG.RS256)
                 .compact();
     }
