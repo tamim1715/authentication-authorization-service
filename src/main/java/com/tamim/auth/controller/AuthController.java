@@ -1,6 +1,8 @@
 package com.tamim.auth.controller;
 
+import com.tamim.auth.dto.request.auth.LoginRequest;
 import com.tamim.auth.dto.request.auth.RegisterRequest;
+import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.dto.response.UserResponse;
 import com.tamim.auth.model.User;
 import com.tamim.auth.service.auth.AuthService;
@@ -31,5 +33,14 @@ public class AuthController {
         UserResponse response = UserMapper.toResponse(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        AuthResponse response = authService.login(request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

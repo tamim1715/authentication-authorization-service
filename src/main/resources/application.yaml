@@ -5,5 +5,5 @@ spring:
     host: localhost
     port: 27017
 jwt:
-  private-key: private-test
-  public-key: public-test
+  private-key: classpath:keys/private.pem
+  public-key: classpath:keys/public.pem
