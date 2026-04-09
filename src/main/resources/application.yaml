@@ -1,9 +1,20 @@
 spring:
   application:
     name: authentication-authorization-service
-  mongodb:
-    host: localhost
-    port: 27017
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/auth_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: "Abcd1234!"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        # For newer Spring/Hibernate versions, sometimes this is needed:
+        format_sql: true
 jwt:
   private-key: classpath:keys/private.pem
   public-key: classpath:keys/public.pem
