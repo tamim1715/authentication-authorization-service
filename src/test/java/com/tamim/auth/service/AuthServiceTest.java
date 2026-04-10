@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,7 +55,7 @@ public class AuthServiceTest {
         when(userRepository.findByEmailAndStatus("test@gmail.com", RecordStatus.ACTIVE))
                 .thenReturn(Optional.of(user));
 
-        when(jwtProvider.generateAccessToken("user123", "test@mail.com", 900000))
+        when(jwtProvider.generateAccessToken("user123", "test@gmail.com", 900000))
                 .thenReturn("access-token");
 
         when(refreshTokenService.CreateRefreshToken("user123", 604800))
@@ -64,9 +63,6 @@ public class AuthServiceTest {
 
         LoginRequest request =
                 new LoginRequest("test@gmail.com", "password");
-
-        // ⚠️ Mock password match manually (you should inject PasswordEncoder)
-        // Here assume already matched
 
         AuthResponse response = authService.login(request);
 
