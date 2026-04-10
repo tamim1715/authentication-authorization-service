@@ -1,0 +1,89 @@
+package com.tamim.auth.service;
+
+import com.tamim.auth.dto.request.auth.LoginRequest;
+import com.tamim.auth.dto.response.AuthResponse;
+import com.tamim.auth.enums.RecordStatus;
+import com.tamim.auth.exception.ValidationException;
+import com.tamim.auth.model.User;
+import com.tamim.auth.repository.UserRepository;
+import com.tamim.auth.security.jwt.JwtTokenProvider;
+import com.tamim.auth.security.jwt.RefreshTokenProvider;
+import com.tamim.auth.service.auth.AuthService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Objects;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+public class AuthServiceTest {
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private JwtTokenProvider jwtProvider;
+
+    @Mock
+    private RefreshTokenProvider refreshTokenService;
+
+    @InjectMocks
+    private AuthService authService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void login_success() {
+        User user = new User();
+        user.setId("user123");
+        user.setEmail("test@gmail.com");
+        user.setPasswordHash("password");
+
+        when(passwordEncoder.matches("password", "password"))
+                .thenReturn(true);
+
+        when(userRepository.findByEmailAndStatus("test@gmail.com", RecordStatus.ACTIVE))
+                .thenReturn(Optional.of(user));
+
+        when(jwtProvider.generateAccessToken("user123", "test@mail.com", 900000))
+                .thenReturn("access-token");
+
+        when(refreshTokenService.CreateRefreshToken("user123", 604800))
+                .thenReturn("refresh-token");
+
+        LoginRequest request =
+                new LoginRequest("test@gmail.com", "password");
+
+        // ⚠️ Mock password match manually (you should inject PasswordEncoder)
+        // Here assume already matched
+
+        AuthResponse response = authService.login(request);
+
+        assertNotNull(response);
+        assertEquals("access-token", response.accessToken());
+    }
+
+    @Test
+    void login_user_not_found() {
+
+        when(userRepository.findByEmailAndStatus("x@mail.com", RecordStatus.ACTIVE))
+                .thenReturn(Optional.empty());
+
+        LoginRequest request =
+                new LoginRequest("x@mail.com", "pass");
+
+        assertThrows(ValidationException.class,
+                () -> authService.login(request));
+    }
+}

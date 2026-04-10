@@ -37,6 +37,8 @@ public class AuthService {
         User user = userRepository.findByEmailAndStatus(request.email(), RecordStatus.ACTIVE)
                 .orElseThrow(() -> new ValidationException("Invalid email or password"));
 
+        System.out.println("username: "+ user.getEmail());
+        System.out.println("Raw password " + request.password() + " hash password " + user.getPasswordHash());
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new ValidationException("Invalid password");
         }
