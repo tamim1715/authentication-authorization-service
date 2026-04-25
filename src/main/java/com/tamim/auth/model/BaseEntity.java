@@ -2,10 +2,7 @@ package com.tamim.auth.model;
 
 import com.tamim.auth.enums.RecordStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,6 +26,7 @@ public abstract class BaseEntity {
     @Column(updatable = false, nullable = false)
     private String id;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING) // Ensures "ACTIVE" is stored as a string in MySQL
     @Column(nullable = false, length = 20)
     private RecordStatus status = RecordStatus.ACTIVE;
