@@ -5,15 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder // Use SuperBuilder to include BaseEntity fields like 'id' and 'status'
 @Entity
 @Table(name = "refresh_tokens", indexes = {
         @Index(name = "idx_token_hash", columnList = "tokenHash"), // High priority for lookups

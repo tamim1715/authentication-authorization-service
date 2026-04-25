@@ -1,10 +1,13 @@
 package com.tamim.auth.security.jwt;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -13,6 +16,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class KeyProvider {
 
     @Value("${jwt.private-key}")
@@ -21,11 +26,11 @@ public class KeyProvider {
     @Value("${jwt.public-key}")
     private String publicKeyPath;
 
+    private final ResourceLoader resourceLoader;
+
     public PrivateKey getPrivateKey() {
         try {
-            String key = Files.readString(Paths.get(privateKeyPath))
-                    .replaceAll("-----\\w+ PRIVATE KEY-----", "")
-                    .replaceAll("\\s", "");
+            String key = readKey(privateKeyPath);
 
             byte[] decoded = Base64.getDecoder().decode(key);
 
@@ -40,10 +45,7 @@ public class KeyProvider {
 
     public PublicKey getPublicKey() {
         try {
-
-            String key = Files.readString(Paths.get(publicKeyPath))
-                    .replaceAll("-----\\w+ PUBLIC KEY-----", "")
-                    .replaceAll("\\s", "");
+            String key = readKey(publicKeyPath);
 
             byte[] decoded = Base64.getDecoder().decode(key);
 
@@ -56,4 +58,15 @@ public class KeyProvider {
         }
     }
 
+    private String readKey(String location) throws Exception {
+        Resource resource = resourceLoader.getResource(location);
+
+        try (InputStream is = resource.getInputStream()) {
+            String key = new String(is.readAllBytes());
+            return key
+                    .replaceAll("-----\\w+ PRIVATE KEY-----", "")
+                    .replaceAll("-----\\w+ PUBLIC KEY-----", "")
+                    .replaceAll("\\s", "");
+        }
+    }
 }
