@@ -1,6 +1,7 @@
 package com.tamim.auth.controller;
 
 import com.tamim.auth.dto.request.auth.LoginRequest;
+import com.tamim.auth.dto.request.auth.RefreshRequest;
 import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.dto.response.UserResponse;
@@ -17,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Validated
 public class AuthController {
 
     private final AuthService authService;
@@ -42,5 +43,20 @@ public class AuthController {
         AuthResponse response = authService.login(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(
+            @RequestBody RefreshRequest request) {
+
+        AuthResponse response = authService.refresh(request.refreshToken());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody RefreshRequest request) {
+
+        authService.logout(request.refreshToken());
     }
 }

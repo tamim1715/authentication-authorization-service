@@ -5,10 +5,10 @@ import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.ValidationException;
+import com.tamim.auth.model.RefreshToken;
 import com.tamim.auth.model.User;
 import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.security.jwt.JwtTokenProvider;
-import com.tamim.auth.security.jwt.RefreshTokenProvider;
 import com.tamim.auth.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenProvider refreshTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmailAndStatus(
@@ -42,11 +42,40 @@ public class AuthService {
         }
 
         String accessToken = jwtTokenProvider
-                .generateAccessToken(user.getId(), user.getEmail(), 900000);
+                .generateAccessToken(user.getId(), 900000);
 
-        String refreshToken = refreshTokenProvider
-                .CreateRefreshToken(user.getId(), 604800);
+        String refreshToken = refreshTokenService
+                .generateRefreshToken(user.getId());
 
         return new AuthResponse(accessToken, refreshToken, 900);
+    }
+
+    public AuthResponse refresh(String refreshToken) {
+
+        // validate + rotation
+        RefreshToken oldToken = refreshTokenService
+                .validateAndRotate(refreshToken);
+
+        String userId = oldToken.getUserId();
+
+        // generate new access token
+        String newAccessToken = jwtTokenProvider
+                .generateAccessToken(userId, 900000);
+
+        // generate new refresh token
+        String newRefreshToken = refreshTokenService
+                .generateRefreshToken(userId);
+
+        return new AuthResponse(
+                newAccessToken,
+                newRefreshToken,
+                900
+        );
+    }
+
+    public void logout(String refreshToken) {
+
+        refreshTokenService
+                .revokeToken(refreshToken);
     }
 }

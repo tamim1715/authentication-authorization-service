@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
     private final KeyProvider keyProvider;
 
-    public String generateAccessToken(String userId, String username, long accessTokenExpiration) {
+    public String generateAccessToken(String userId, long accessTokenExpiration) {
 
         PrivateKey privateKey = keyProvider.getPrivateKey();
 
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(userId)
-                .issuer(username)
+//                .issuer(username)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiry))
                 .signWith(privateKey, Jwts.SIG.RS256)
