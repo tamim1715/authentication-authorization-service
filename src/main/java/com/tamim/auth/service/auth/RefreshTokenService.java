@@ -76,7 +76,9 @@ public class RefreshTokenService {
                 .findByTokenHashAndStatus(hash, RecordStatus.ACTIVE)
                 .orElseThrow(() -> new AuthorizationException("Invalid refresh token"));
 
-        if (!token.isRevoked()) {
+        if (token.isRevoked()) {
+            revokeAll(token.getUserId());
+        } else {
             token.setRevoked(true);
             refreshTokenRepository.save(token);
         }
