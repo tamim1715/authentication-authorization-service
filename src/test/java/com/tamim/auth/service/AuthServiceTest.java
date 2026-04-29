@@ -45,7 +45,7 @@ public class AuthServiceTest {
     @Test
     void login_success() {
         User user = new User();
-        user.setId("user123");
+        user.setId("tamim1234");
         user.setEmail("tamim@gmail.com");
         user.setPasswordHash("password");
 
@@ -55,10 +55,10 @@ public class AuthServiceTest {
         when(userRepository.findByEmailAndStatus("tamim@gmail.com", RecordStatus.ACTIVE))
                 .thenReturn(Optional.of(user));
 
-        when(jwtProvider.generateAccessToken("user123", 900000))
+        when(jwtProvider.generateAccessToken("tamim1234", 900000))
                 .thenReturn("access-token");
 
-        when(refreshTokenService.generateRefreshToken("user123"))
+        when(refreshTokenService.generateRefreshToken("tamim1234"))
                 .thenReturn("refresh-token");
 
         LoginRequest request =
