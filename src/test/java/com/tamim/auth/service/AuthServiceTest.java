@@ -7,8 +7,8 @@ import com.tamim.auth.exception.ValidationException;
 import com.tamim.auth.model.User;
 import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.security.jwt.JwtTokenProvider;
-import com.tamim.auth.security.jwt.RefreshTokenProvider;
 import com.tamim.auth.service.auth.AuthService;
+import com.tamim.auth.service.auth.RefreshTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ public class AuthServiceTest {
     private JwtTokenProvider jwtProvider;
 
     @Mock
-    private RefreshTokenProvider refreshTokenService;
+    private RefreshTokenService refreshTokenService;
 
     @InjectMocks
     private AuthService authService;
@@ -55,10 +55,10 @@ public class AuthServiceTest {
         when(userRepository.findByEmailAndStatus("test@gmail.com", RecordStatus.ACTIVE))
                 .thenReturn(Optional.of(user));
 
-        when(jwtProvider.generateAccessToken("user123", "test@gmail.com", 900000))
+        when(jwtProvider.generateAccessToken("user123", 900000))
                 .thenReturn("access-token");
 
-        when(refreshTokenService.CreateRefreshToken("user123", 604800))
+        when(refreshTokenService.generateRefreshToken("user123"))
                 .thenReturn("refresh-token");
 
         LoginRequest request =
