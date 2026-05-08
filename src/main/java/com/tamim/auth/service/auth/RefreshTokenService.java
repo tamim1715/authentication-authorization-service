@@ -4,14 +4,12 @@ import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.AuthorizationException;
 import com.tamim.auth.model.RefreshToken;
 import com.tamim.auth.repository.RefreshTokenRepository;
+import com.tamim.auth.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +22,8 @@ public class RefreshTokenService {
     private static final long EXPIRATION = 60 * 60 * 24 * 7; // 7 days
 
     public String generateRefreshToken(String userId) {
-        String rawToken = generateSecureToken();
-        String hash = hashToken(rawToken);
+        String rawToken = TokenUtils.generateSecureToken();
+        String hash = TokenUtils.hashToken(rawToken);
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userId(userId)
@@ -42,7 +40,7 @@ public class RefreshTokenService {
     // VALIDATE + ROTATE (used in refresh)
     public RefreshToken validateAndRotate(String rawString) {
 
-        String hash = hashToken(rawString);
+        String hash = TokenUtils.hashToken(rawString);
 
         RefreshToken token = refreshTokenRepository
                 .findByTokenHashAndStatus(hash, RecordStatus.ACTIVE)
@@ -70,7 +68,7 @@ public class RefreshTokenService {
     }
 
     public void revokeToken(String rawToken) {
-        String hash = hashToken(rawToken);
+        String hash = TokenUtils.hashToken(rawToken);
 
         RefreshToken token = refreshTokenRepository
                 .findByTokenHashAndStatus(hash, RecordStatus.ACTIVE)
@@ -91,25 +89,5 @@ public class RefreshTokenService {
         tokens.forEach(t -> t.setRevoked(true));
 
         refreshTokenRepository.saveAll(tokens);
-    }
-
-    private String generateSecureToken() {
-        byte[] randomBytes = new byte[64];
-        new SecureRandom().nextBytes(randomBytes);
-
-        return Base64.getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(randomBytes);
-    }
-
-    public String hashToken(String token) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(token.getBytes());
-            return Base64.getEncoder().encodeToString(hash);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Token hashing failed");
-        }
     }
 }
