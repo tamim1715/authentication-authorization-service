@@ -1,5 +1,7 @@
 package com.tamim.auth.util;
 
+import com.tamim.auth.constant.MessageConstants;
+
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -22,7 +24,7 @@ public class TokenUtils {
             return Base64.getEncoder().encodeToString(hash);
 
         } catch (Exception e) {
-            throw new RuntimeException("Token hashing failed");
+            throw new RuntimeException(MessageConstants.TOKEN_HASHING_FAILED);
         }
     }
 }
