@@ -1,5 +1,6 @@
 package com.tamim.auth.service.auth;
 
+import com.tamim.auth.constant.MessageConstants;
 import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.AuthorizationException;
 import com.tamim.auth.model.RefreshToken;
@@ -45,19 +46,22 @@ public class RefreshTokenService {
         RefreshToken token = refreshTokenRepository
                 .findByTokenHashAndStatus(hash, RecordStatus.ACTIVE)
                 .orElseThrow(() ->
-                        new AuthorizationException("Invalid refresh token"));
+                        new AuthorizationException(
+                                MessageConstants.INVALID_REFRESH_TOKEN)
+                );
 
         // reuse detection
         if (token.isRevoked()) {
             revokeAll(token.getUserId());
 
             throw new AuthorizationException(
-                    "Refresh token reuse detected. All sessions revoked."
+                    MessageConstants.REFRESH_TOKEN_REUSE_DETECTED
             );
         }
 
         if (token.getExpiresAt().isBefore(Instant.now())) {
-            throw new AuthorizationException("Refresh token expired");
+            throw new AuthorizationException(
+                    MessageConstants.REFRESH_TOKEN_EXPIRED);
         }
 
         // rotation
@@ -72,7 +76,8 @@ public class RefreshTokenService {
 
         RefreshToken token = refreshTokenRepository
                 .findByTokenHashAndStatus(hash, RecordStatus.ACTIVE)
-                .orElseThrow(() -> new AuthorizationException("Invalid refresh token"));
+                .orElseThrow(() -> new AuthorizationException(
+                        MessageConstants.INVALID_REFRESH_TOKEN));
 
         if (token.isRevoked()) {
             revokeAll(token.getUserId());

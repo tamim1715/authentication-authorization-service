@@ -1,5 +1,6 @@
 package com.tamim.auth.service.auth;
 
+import com.tamim.auth.constant.MessageConstants;
 import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.AuthorizationException;
 import com.tamim.auth.model.PasswordResetToken;
@@ -56,18 +57,23 @@ public class PasswordResetService {
 
         PasswordResetToken token = passwordResetTokenRepository
                 .findByTokenHashAndStatus(hashToken, RecordStatus.ACTIVE)
-                .orElseThrow(() -> new AuthorizationException("Invalid or expired token"));
+                .orElseThrow(() -> new AuthorizationException(
+                        MessageConstants.INVALID_OR_EXPIRED_TOKEN)
+                );
 
         if (token.isUsed()) {
-            throw new AuthorizationException("Token already used");
+            throw new AuthorizationException(MessageConstants.TOKEN_ALREADY_USED);
         }
 
         if (token.getExpiredAt().isBefore(Instant.now())) {
-            throw new AuthorizationException("Token expired");
+            throw new AuthorizationException(MessageConstants.TOKEN_EXPIRED);
         }
 
-        User user = userRepository.findByIdAndStatus(token.getUserId(), RecordStatus.ACTIVE)
-                .orElseThrow(() -> new AuthorizationException("User not found"));
+        User user = userRepository.findByIdAndStatus(
+                        token.getUserId(), RecordStatus.ACTIVE)
+                .orElseThrow(() -> new AuthorizationException(
+                        MessageConstants.USER_NOT_FOUND)
+                );
 
         // update password
         user.setPasswordHash(passwordEncoder.encode(newPassword));

@@ -1,5 +1,6 @@
 package com.tamim.auth.service.auth;
 
+import com.tamim.auth.constant.MessageConstants;
 import com.tamim.auth.dto.request.auth.LoginRequest;
 import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.AuthResponse;
@@ -26,7 +27,7 @@ public class AuthService {
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmailAndStatus(
                 request.email(), RecordStatus.ACTIVE)) {
-            throw new ValidationException("Email already registered");
+            throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         }
 
         User user = UserMapper.toEntity(request, passwordEncoder);
@@ -35,10 +36,11 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmailAndStatus(request.email(), RecordStatus.ACTIVE)
-                .orElseThrow(() -> new ValidationException("Invalid email or password"));
+                .orElseThrow(() -> new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD));
 
+        // compare raw password with hash password
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new ValidationException("Invalid password");
+            throw new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD);
         }
 
         String accessToken = jwtTokenProvider

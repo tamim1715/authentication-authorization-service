@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(ApiException ex) {
 
-        log.warn("Business error: {}", ex.getMessage());
+        log.error("Business error: {}", ex.getMessage());
 
         return ResponseEntity
                 .status(ex.getStatus())

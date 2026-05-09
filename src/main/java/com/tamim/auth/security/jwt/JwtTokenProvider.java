@@ -32,7 +32,6 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(userId)
-//                .issuer(username)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiry))
                 .signWith(privateKey, Jwts.SIG.RS256)
