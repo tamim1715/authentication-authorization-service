@@ -9,13 +9,16 @@ import com.tamim.auth.repository.PasswordResetTokenRepository;
 import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PasswordResetService {
 
@@ -46,6 +49,8 @@ public class PasswordResetService {
                 generatePasswordResetToken(hashToken, user);
 
         passwordResetTokenRepository.save(passwordResetToken);
+
+        log.info("raw token: {}", rawToken);
 
         // TODO: send email
         //  link: https://frontend/reset-password?token=rawToken
@@ -85,6 +90,9 @@ public class PasswordResetService {
         // mark token used
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
+
+        // remove duplicate reset request
+        removeDuplicateReset(token.getUserId());
     }
 
     private PasswordResetToken generatePasswordResetToken(
@@ -99,5 +107,14 @@ public class PasswordResetService {
         token.setExpiredAt(Instant.now().plusSeconds(EXPIRATION));
 
         return token;
+    }
+
+    private void removeDuplicateReset(String userId) {
+        List<PasswordResetToken> resetTokenList = passwordResetTokenRepository
+                .findAllByUserIdAndUsedIsFalse(userId);
+
+        resetTokenList.forEach(t -> t.setUsed(true));
+
+        passwordResetTokenRepository.saveAll(resetTokenList);
     }
 }
