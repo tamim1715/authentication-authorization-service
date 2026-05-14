@@ -14,6 +14,4 @@ public interface PasswordResetTokenRepository
             String tokenHash, RecordStatus status);
 
     List<PasswordResetToken> findAllByUserIdAndUsedIsFalse(String userId);
-
-
 }

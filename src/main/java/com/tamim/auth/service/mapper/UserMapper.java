@@ -20,12 +20,10 @@ public class UserMapper {
         );
     }
 
-    public static User toEntity(RegisterRequest request,
-                                PasswordEncoder encoder) {
+    public static User toEntity(RegisterRequest request) {
 
         User user = new User();
         user.setEmail(request.email());
-        user.setPasswordHash(encoder.encode(request.password()));
         user.setFirstName(request.firstName());
         user.setUserType(request.userType());
         user.setAddress(request.address());

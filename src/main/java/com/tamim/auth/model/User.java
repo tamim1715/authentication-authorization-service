@@ -39,5 +39,7 @@ public class User extends BaseEntity {
 
     private boolean enabled;
 
+    private boolean emailVerified;
+
     private Instant lastLoginAt;
 }

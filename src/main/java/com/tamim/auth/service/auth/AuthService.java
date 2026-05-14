@@ -5,6 +5,7 @@ import com.tamim.auth.dto.request.auth.LoginRequest;
 import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.enums.RecordStatus;
+import com.tamim.auth.exception.AuthorizationException;
 import com.tamim.auth.exception.ValidationException;
 import com.tamim.auth.model.RefreshToken;
 import com.tamim.auth.model.User;
@@ -23,20 +24,41 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
+    private final EmailVerificationService emailVerificationService;
 
     public User register(RegisterRequest request) {
+
         if (userRepository.existsByEmailAndStatus(
                 request.email(), RecordStatus.ACTIVE)) {
             throw new ValidationException(MessageConstants.EMAIL_ALREADY_EXISTS);
         }
 
-        User user = UserMapper.toEntity(request, passwordEncoder);
-        return userRepository.save(user);
+        // generate request dto to entity
+        User userEntity = UserMapper.toEntity(request);
+
+        // password hash for security
+        userEntity.setPasswordHash(passwordEncoder.encode(request.password()));
+        userEntity.setEnabled(false);
+        userEntity.setEmailVerified(false);
+
+        User user = userRepository.save(userEntity);
+
+        // call email verification service for verify user
+        emailVerificationService.sendVerificationEmail(user);
+
+        return user;
     }
 
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByEmailAndStatus(request.email(), RecordStatus.ACTIVE)
-                .orElseThrow(() -> new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD));
+
+        User user = userRepository
+                .findByEmailAndStatus(request.email(), RecordStatus.ACTIVE)
+                .orElseThrow(() ->
+                        new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD));
+
+        if (!user.isEnabled()) {
+            throw new AuthorizationException("Please verify your email first");
+        }
 
         // compare raw password with hash password
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {

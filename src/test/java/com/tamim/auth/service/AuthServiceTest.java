@@ -48,6 +48,8 @@ public class AuthServiceTest {
         user.setId("tamim1234");
         user.setEmail("tamim@gmail.com");
         user.setPasswordHash("password");
+        user.setEnabled(true);
+        user.setEmailVerified(true);
 
         when(passwordEncoder.matches("password", "password"))
                 .thenReturn(true);
