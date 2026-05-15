@@ -10,6 +10,7 @@ import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.service.email.EmailService;
 import com.tamim.auth.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailVerificationService {
 
     private final UserRepository userRepository;
@@ -42,6 +44,8 @@ public class EmailVerificationService {
                 Instant.now().plusSeconds(EXPIRATION)
         );
         token.setUsed(false);
+
+        log.info("verification token: {}", rawToken);
 
         emailVerificationTokenRepository.save(token);
 

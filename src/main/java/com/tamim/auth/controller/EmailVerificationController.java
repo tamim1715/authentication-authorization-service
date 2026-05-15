@@ -18,8 +18,8 @@ public class EmailVerificationController {
 
     @PostMapping("/verify-email")
     public void verify(@RequestBody VerifyEmailRequest request) {
-        emailVerificationService.verify(request.token());
 
+        emailVerificationService.verify(request.token());
     }
 
     @PostMapping("/resend-verification")
