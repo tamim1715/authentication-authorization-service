@@ -190,3 +190,27 @@ docker run --name auth-mysql \
 ./mvnw spring-boot:run
 ```
 
+## 📌 API Endpoints
+### Authentication
+```
+| Method | Endpoint             | Description          |
+| ------ | -------------------- | -------------------- |
+| POST   | `/api/v1/auth/register` | Register User        |
+| POST   | `/api/v1/auth/login`    | Login                |
+| POST   | `/api/v1/auth/refresh`  | Refresh Access Token |
+| POST   | `/api/v1/auth/logout`   | Logout               |
+```
+### Email Verification
+```
+| Method | Endpoint                        |
+| ------ | ------------------------------- |
+| POST   | `/api/v1/auth/verify-email`        |
+| POST   | `/api/v1/auth/resend-verification` |
+```
+### Password Reset
+```
+| Method | Endpoint                    |
+| ------ | --------------------------- |
+| POST   | `/api/v1/auth/forgot-password` |
+| POST   | `/api/v1/auth/reset-password`  |
+```
