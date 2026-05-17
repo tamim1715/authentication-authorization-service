@@ -193,8 +193,8 @@ docker run --name auth-mysql \
 ## 📌 API Endpoints
 ### Authentication
 ```
-| Method | Endpoint             | Description          |
-| ------ | -------------------- | -------------------- |
+| Method | Endpoint                | Description          |
+| ------ | ----------------------- | -------------------- |
 | POST   | `/api/v1/auth/register` | Register User        |
 | POST   | `/api/v1/auth/login`    | Login                |
 | POST   | `/api/v1/auth/refresh`  | Refresh Access Token |
@@ -202,15 +202,32 @@ docker run --name auth-mysql \
 ```
 ### Email Verification
 ```
-| Method | Endpoint                        |
-| ------ | ------------------------------- |
+| Method | Endpoint                           |
+| ------ | ---------------------------------- |
 | POST   | `/api/v1/auth/verify-email`        |
 | POST   | `/api/v1/auth/resend-verification` |
 ```
 ### Password Reset
 ```
-| Method | Endpoint                    |
-| ------ | --------------------------- |
+| Method | Endpoint                       |
+| ------ | ------------------------------ |
 | POST   | `/api/v1/auth/forgot-password` |
 | POST   | `/api/v1/auth/reset-password`  |
 ```
+## 🧱 Security Decisions
+### Why RS256 Instead of HS256?
+* Better security separation
+* Private key signs token
+* Public key validates token
+* Safer for microservice architecture
+
+### Why Store Refresh Tokens in DB?
+* Session invalidation
+* Reuse detection
+* Logout support
+* Device/session control
+
+### Why Hash Refresh Tokens?
+If database leaks:
+* Raw token ❌ dangerous
+* Hashed token ✅ secure
