@@ -231,3 +231,12 @@ docker run --name auth-mysql \
 If database leaks:
 * Raw token ❌ dangerous
 * Hashed token ✅ secure
+
+## 🧠 Engineering Principles
+* Clean Architecture
+* SOLID Principles 
+* DTO-Based API Design 
+* Stateless Authentication 
+* Centralized Exception Handling 
+* Secure Defaults 
+* Production-Oriented Security
