@@ -177,6 +177,7 @@ jwt:
 ```
 git clone https://github.com/tamim1715/authentication-authorization-service.git
 ```
+
 ### Run MySQL
 ```
 docker run --name auth-mysql \
@@ -200,6 +201,7 @@ docker run --name auth-mysql \
 | POST   | `/api/v1/auth/refresh`  | Refresh Access Token |
 | POST   | `/api/v1/auth/logout`   | Logout               |
 ```
+
 ### Email Verification
 ```
 | Method | Endpoint                           |
@@ -207,6 +209,7 @@ docker run --name auth-mysql \
 | POST   | `/api/v1/auth/verify-email`        |
 | POST   | `/api/v1/auth/resend-verification` |
 ```
+
 ### Password Reset
 ```
 | Method | Endpoint                       |
@@ -214,6 +217,7 @@ docker run --name auth-mysql \
 | POST   | `/api/v1/auth/forgot-password` |
 | POST   | `/api/v1/auth/reset-password`  |
 ```
+
 ## 🧱 Security Decisions
 ### Why RS256 Instead of HS256?
 * Better security separation
@@ -240,3 +244,12 @@ If database leaks:
 * Centralized Exception Handling 
 * Secure Defaults 
 * Production-Oriented Security
+
+## 🔮 Planned Features
+* Google OAuth Login
+* GitHub OAuth Login
+* Account Locking
+* Login Attempt Tracking
+* Redis Session Blacklist
+* Multi-Device Session Management
+* Docker & Kubernetes Deployment
