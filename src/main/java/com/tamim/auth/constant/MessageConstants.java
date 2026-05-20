@@ -15,5 +15,6 @@ public final class MessageConstants {
     public static final String EMAIL_ALREADY_EXISTS = "Email already registered";
     public static final String INVALID_OR_EXPIRED_TOKEN = "Invalid or expired token";
     public static final String INVALID_EMAIL_OR_PASSWORD = "Invalid email or password";
+    public static final String ACCOUNT_LOCK = "Account locked. Try again later.";
     public static final String REFRESH_TOKEN_REUSE_DETECTED = "Refresh token reuse detected. All sessions revoked.";
 }

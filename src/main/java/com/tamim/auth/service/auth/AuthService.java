@@ -23,6 +23,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AccountLockService accountLockService;
     private final RefreshTokenService refreshTokenService;
     private final EmailVerificationService emailVerificationService;
 
@@ -56,12 +57,22 @@ public class AuthService {
                 .orElseThrow(() ->
                         new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD));
 
+        // check email unverified
         if (!user.isEnabled()) {
             throw new AuthorizationException("Please verify your email first");
         }
 
+        // check account lock
+        accountLockService.checkLockStatus(user);
+
         // compare raw password with hash password
-        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(
+                request.password(),
+                user.getPasswordHash()))
+        {
+            // increment login failed counter
+            accountLockService.loginFailed(user);
+
             throw new ValidationException(MessageConstants.INVALID_EMAIL_OR_PASSWORD);
         }
 
@@ -70,6 +81,9 @@ public class AuthService {
 
         String refreshToken = refreshTokenService
                 .generateRefreshToken(user.getId());
+
+        // counter reset while successful login
+        accountLockService.successLogin(user);
 
         return new AuthResponse(accessToken, refreshToken, 900);
     }

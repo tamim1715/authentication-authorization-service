@@ -42,4 +42,8 @@ public class User extends BaseEntity {
     private boolean emailVerified;
 
     private Instant lastLoginAt;
+
+    private int failedLoginAttempts;
+
+    private Instant accountLockedUntil;
 }

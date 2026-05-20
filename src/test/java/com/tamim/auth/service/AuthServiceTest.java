@@ -7,6 +7,7 @@ import com.tamim.auth.exception.ValidationException;
 import com.tamim.auth.model.User;
 import com.tamim.auth.repository.UserRepository;
 import com.tamim.auth.security.jwt.JwtTokenProvider;
+import com.tamim.auth.service.auth.AccountLockService;
 import com.tamim.auth.service.auth.AuthService;
 import com.tamim.auth.service.auth.RefreshTokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,9 @@ public class AuthServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private AccountLockService accountLockService;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -50,6 +54,7 @@ public class AuthServiceTest {
         user.setPasswordHash("password");
         user.setEnabled(true);
         user.setEmailVerified(true);
+        user.setFailedLoginAttempts(0);
 
         when(passwordEncoder.matches("password", "password"))
                 .thenReturn(true);
