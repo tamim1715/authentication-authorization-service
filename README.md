@@ -253,3 +253,7 @@ If database leaks:
 * Redis Session Blacklist
 * Multi-Device Session Management
 * Docker & Kubernetes Deployment
+
+## 👨‍💻 Author
+Shahadath Hossain Tamim </br>
+Backend Software Engineer
