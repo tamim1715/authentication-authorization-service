@@ -3,6 +3,7 @@ package com.tamim.auth.service;
 import com.tamim.auth.dto.request.auth.LoginRequest;
 import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.enums.RecordStatus;
+import com.tamim.auth.exception.AuthorizationException;
 import com.tamim.auth.exception.ValidationException;
 import com.tamim.auth.model.User;
 import com.tamim.auth.repository.UserRepository;
@@ -86,6 +87,22 @@ public class AuthServiceTest {
                 new LoginRequest("x@mail.com", "pass");
 
         assertThrows(ValidationException.class,
+                () -> authService.login(request));
+    }
+
+    @Test
+    void user_disable() {
+        User user = new User();
+        user.setEnabled(false);
+        user.setEmail("x@mail.com");
+
+        when(userRepository.findByEmailAndStatus("x@mail.com", RecordStatus.ACTIVE))
+                .thenReturn(Optional.of(user));
+
+        LoginRequest request =
+                new LoginRequest("x@mail.com", "pass");
+
+        assertThrows(AuthorizationException.class,
                 () -> authService.login(request));
     }
 }
