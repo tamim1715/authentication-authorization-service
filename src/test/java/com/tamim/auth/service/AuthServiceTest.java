@@ -1,6 +1,7 @@
 package com.tamim.auth.service;
 
 import com.tamim.auth.dto.request.auth.LoginRequest;
+import com.tamim.auth.dto.request.auth.RegisterRequest;
 import com.tamim.auth.dto.response.AuthResponse;
 import com.tamim.auth.enums.RecordStatus;
 import com.tamim.auth.exception.AuthorizationException;
@@ -104,5 +105,24 @@ public class AuthServiceTest {
 
         assertThrows(AuthorizationException.class,
                 () -> authService.login(request));
+    }
+
+    @Test
+    void register_user_not_found() {
+        when(userRepository.existsByEmailAndStatus("tamim@gmail.com", RecordStatus.ACTIVE))
+                .thenReturn(true);
+
+        RegisterRequest request = new RegisterRequest(
+                "tamim@gmail.com", // email
+                null,             // password
+                null,             // firstName
+                null,             // lastName
+                null,             // phone
+                null,             // address
+                null              // userType
+        );
+
+        assertThrows(ValidationException.class,
+                () -> authService.register(request));
     }
 }
