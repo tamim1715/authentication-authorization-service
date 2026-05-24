@@ -59,7 +59,7 @@ public class AuthService {
 
         // check email unverified
         if (!user.isEnabled()) {
-            throw new AuthorizationException("Please verify your email first");
+            throw new AuthorizationException(MessageConstants.VERIFY_EMAIL_ADDRESS);
         }
 
         // check account lock
