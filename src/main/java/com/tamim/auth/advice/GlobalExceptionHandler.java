@@ -1,5 +1,6 @@
 package com.tamim.auth.advice;
 
+import com.tamim.auth.constant.MessageConstants;
 import com.tamim.auth.dto.response.ApiErrorResponse;
 import com.tamim.auth.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +42,9 @@ public class GlobalExceptionHandler {
                 .body(
                         ApiErrorResponse.builder()
                                 .status(500)
-                                .error("Internal Server Error")
-                                .message("Something went wrong")
-                                .errorCode("INTERNAL_ERROR")
+                                .error(MessageConstants.INTERNAL_SERVER_ERROR)
+                                .message(MessageConstants.SOMETHING_WENT_WRONG)
+                                .errorCode(MessageConstants.INTERNAL_ERROR)
                                 .timestamp(Instant.now())
                                 .build()
                 );
