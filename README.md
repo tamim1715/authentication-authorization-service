@@ -256,4 +256,4 @@ If database leaks:
 
 ## 👨‍💻 Author
 Shahadath Hossain Tamim </br>
-Senior Backend Software Engineer
+Backend Software Engineer
