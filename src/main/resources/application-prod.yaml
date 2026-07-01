@@ -23,6 +23,17 @@ spring:
         format_sql: false
     # Disable for better memory management
     open-in-view: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
 jwt:
   private-key: ${PRIVATE_KEY}
   public-key: ${PUBLIC_KEY}

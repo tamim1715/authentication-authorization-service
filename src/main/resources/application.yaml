@@ -6,6 +6,16 @@ spring:
     username: root
     password: "Abcd1234!"
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID} // for local test replace this by actual client id
+            client-secret: ${GOOGLE_CLIENT_SECRET} // replace this by actual client secret
+            scope:
+              - email
+              - profile
   jpa:
     show-sql: true
     hibernate:

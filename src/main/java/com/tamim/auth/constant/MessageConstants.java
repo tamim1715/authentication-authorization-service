@@ -19,6 +19,7 @@ public final class MessageConstants {
     public static final String VERIFY_EMAIL_ADDRESS = "Please verify your email first";
     public static final String REFRESH_TOKEN_REUSE_DETECTED = "Refresh token reuse detected. All sessions revoked.";
 
+    // internal server error
     public static final String SOMETHING_WENT_WRONG = "Something went wrong";
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String INTERNAL_ERROR = "INTERNAL_ERROR";

@@ -1,5 +1,6 @@
 package com.tamim.auth.model;
 
+import com.tamim.auth.enums.AuthProvider;
 import com.tamim.auth.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,4 +47,8 @@ public class User extends BaseEntity {
     private int failedLoginAttempts;
 
     private Instant accountLockedUntil;
+
+    private AuthProvider authProvider;
+
+    private String oauthId;
 }
